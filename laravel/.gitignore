@@ -1,0 +1,3 @@
+/docker/volumes/*
+/docker/mysql/initdb.d/*
+!/docker/mysql/initdb.d/.keep
