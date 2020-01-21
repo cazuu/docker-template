@@ -2,7 +2,9 @@
 
 ROOT_DIR=..
 
-cp $ROOT_DIR/.env.example $ROOT_DIR/.env
+if [[ ! -e $ROOT_DIR/.env ]]; then
+    cp $ROOT_DIR/.env.example $ROOT_DIR/.env
+fi
 
 sed -i "" "/APP_URL/s/$/:9400/" $ROOT_DIR/.env
 sed -i "" "/DB_HOST/s/=.*/=mysql/" $ROOT_DIR/.env

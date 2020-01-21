@@ -13,7 +13,7 @@ else
   OPEN=xdg-open
 endif
 
-include ../.env
+include ../.env.example
 
 .PHONY: help
 
