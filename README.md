@@ -12,3 +12,7 @@ git submodule add -b laravel https://github.com/cazuu/docker-template.git docker
 git submodule update -i
 ```
 
+### Update submodule
+```bash
+git submodule update -i --remote --recursive
+```
