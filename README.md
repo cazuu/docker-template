@@ -8,7 +8,7 @@ docker run --rm --interactive --tty -v $(pwd):/app composer:1.8.4 bash -c "compo
 
 ### Clone docker modules
 ```bash
-git submodule add https://github.com/cazuu/docker-template.git
+git submodule add -b laravel https://github.com/cazuu/docker-template.git docker
 git submodule update -i
 ```
 

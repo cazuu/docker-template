@@ -1,2 +1,6 @@
+/volumes/*
+/mysql/initdb.d/*
+!/mysql/initdb.d/.keep
+
 .DS_store
 .idea

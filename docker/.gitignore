@@ -1,3 +1,0 @@
-/volumes/*
-/mysql/initdb.d/*
-!/mysql/initdb.d/.keep
