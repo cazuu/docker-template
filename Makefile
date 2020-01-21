@@ -102,13 +102,13 @@ shell:
 	@docker-compose -p $(APP_NAME) exec apache /bin/bash
 
 migrate:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan migrate
+	@docker-compose -p $(APP_NAME) exec apache php artisan migrate
 
 rollback:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan migrate:rollback
+	@docker-compose -p $(APP_NAME) exec apache php artisan migrate:rollback
 
 seed:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan db:seed
+	@docker-compose -p $(APP_NAME) exec apache php artisan db:seed
 
 routes:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan route:list
@@ -123,7 +123,7 @@ composer-autoload:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer dump-autoload
 
 artisan:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan ${CM}
+	@docker-compose -p $(APP_NAME) exec apache php artisan ${CM}
 
 artisan-key-generate:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan key:generate
