@@ -38,7 +38,6 @@ services:
       - /var/www/html/.git
       - /var/www/html/docker
       - /var/www/html/node_modules
-      - /var/www/html/storage/debugbar
     links:
       - mysql
       - smtp

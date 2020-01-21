@@ -23,7 +23,8 @@ help:
 	@echo "  make help              Prints this help."
 	@echo
 	@echo "  make open              Open www in your browser."
-	@echo "  make open-phpmyadmin   Open phpmyadmin in your browser."
+	@echo "  make open-nginx        Open nginx in your browser."
+	@echo "  make open-pma          Open phpmyadmin in your browser."
 	@echo
 	@echo "Docker:"
 	@echo
@@ -64,16 +65,16 @@ open-nginx:
 .PHONY: build serve start stop down status restart serve-pma start-pma serve-nginx start-nginx
 
 build:
-	@docker-compose -p $(APP_NAME) build apache mysql smtp cron
+	@docker-compose -p $(APP_NAME) build apache mysql smtp
 
 serve:
-	@docker-compose -p $(APP_NAME) up apache mysql smtp cron
+	@docker-compose -p $(APP_NAME) up apache mysql smtp
 
 start:
-	@docker-compose -p $(APP_NAME) up -d apache mysql smtp cron
+	@docker-compose -p $(APP_NAME) up -d apache mysql smtp
 
 stop:
-	@docker-compose -p $(APP_NAME) stop apache mysql smtp cron
+	@docker-compose -p $(APP_NAME) stop apache mysql smtp
 
 restart: stop start
 
@@ -101,16 +102,16 @@ shell:
 	@docker-compose -p $(APP_NAME) exec apache /bin/bash
 
 migrate:
-	@docker-compose -p $(APP_NAME) exec apache php ./artisan migrate
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan migrate
 
 rollback:
-	@docker-compose -p $(APP_NAME) exec apache php ./artisan migrate:rollback
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan migrate:rollback
 
 seed:
-	@docker-compose -p $(APP_NAME) exec apache php ./artisan db:seed
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan db:seed
 
 routes:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint /data composer php artisan route:list
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan route:list
 
 composer-install:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer install
@@ -122,13 +123,13 @@ composer-autoload:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer dump-autoload
 
 artisan:
-	@docker-compose -p $(APP_NAME) exec apache php artisan ${CM}
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan ${CM}
 
 artisan-key-generate:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint /data composer php artisan key:generate
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan key:generate
 
 artisan-storage-link:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint /data composer php artisan storage:link
+	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan storage:link
 
 .PHONY: npm npm-install npm-dev npm-watch
 
