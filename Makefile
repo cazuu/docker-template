@@ -129,7 +129,7 @@ artisan-key-generate:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan key:generate
 
 artisan-storage-link:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan storage:link
+	@docker-compose -p $(APP_NAME) exec apache php artisan storage:link
 
 .PHONY: npm npm-install npm-dev npm-watch
 

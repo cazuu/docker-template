@@ -11,6 +11,14 @@ RUN { \
   echo 'xdebug.remote_enable=1'; \
 } > /usr/local/etc/php/conf.d/overrides.ini
 
+RUN { \
+  echo "file_uploads = On"; \
+  echo "memory_limit = 500M"; \
+  echo "upload_max_filesize = 500M"; \
+  echo "post_max_size = 500M"; \
+  echo "max_execution_time = 600"; \
+} > /usr/local/etc/php/conf.d/uploads.ini
+
 COPY apache/cron.conf /etc/cron.d/user-cron
 COPY apache/supervisord.conf /etc/supervisor/conf.d/process.conf
 
