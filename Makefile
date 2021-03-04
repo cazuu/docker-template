@@ -159,3 +159,16 @@ phpcs:
 
 docker-phpcs:
 	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
+
+.PHONY: ide-helper-generate ide-helper-model ide-helper-meta ide-helper
+
+ide-helper-generate:
+	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:generate
+
+ide-helper-model:
+	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:model --nowrite
+
+ide-helper-meta:
+	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:meta
+
+ide-helper: ide-helper-generate ide-helper-model ide-helper-meta
