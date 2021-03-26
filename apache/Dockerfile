@@ -8,6 +8,7 @@ RUN apt-get update -y \
     && docker-php-ext-enable imagick \
     && docker-php-ext-configure zip --with-libzip \
     && docker-php-ext-install zip \
+    && docker-php-ext-install gd \
     && apt-get clean \
     && a2enmod rewrite
 
