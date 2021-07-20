@@ -12,7 +12,7 @@ services:
       - /app/docker
       - /app/node_modules
   npm:
-    image: node:10.15.3
+    image: node:12.22.3
     working_dir: /app
     entrypoint: npm
     command: -h
