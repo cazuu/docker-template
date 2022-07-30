@@ -9,32 +9,11 @@ services:
     environment:
       APACHE_DOCYMENT_ROOT: /var/www/html/public
     ports:
-      - 9400:80
+      - ${HOST_IP:-127.0.0.1}:${HOST_WEB_PORT:-80}:80
     volumes:
       - ..:/var/www/html
       - ./apache/http.conf:/etc/apache2/sites-available/000-default.conf
       - ./volumes/log/apache:/var/log/apache2
-      - /var/www/html/.git
-      - /var/www/html/docker
-      - /var/www/html/node_modules
-    links:
-      - mysql
-      - smtp
-  nginx:
-    image: nginx:1.15.6-alpine
-    ports:
-      - 9400:80
-    volumes:
-      - ../public:/var/www/html/public
-      - ../storage/app/public:/var/www/html/storage/app/public
-      - ./nginx/nginx-default.conf:/etc/nginx/conf.d/default.conf
-      - ./volumes/log/nginx:/var/log/nginx
-    links:
-      - fpm
-  fpm:
-    image: cazuu/php-fpm
-    volumes:
-      - ..:/var/www/html
       - /var/www/html/.git
       - /var/www/html/docker
       - /var/www/html/node_modules
@@ -47,23 +26,23 @@ services:
       MYSQL_DATABASE: database
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - 9401:3306
+      - ${HOST_IP:-127.0.0.1}:${HOST_DB_PORT:-3306}:3306
     volumes:
       - ./volumes/mysql:/var/lib/mysql
       - ./mysql/initdb.d:/docker-entrypoint-initdb.d
   smtp:
     image: schickling/mailcatcher
     ports:
-      - 9402:1080
+      - ${HOST_IP:-127.0.0.1}:${HOST_MAIL_PORT:-1080}:1080
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mysql
-      - PMA_USER=root
-      - PMA_PASSWORD=password
-    ports:
-      - 9403:80
-    links:
-      - mysql
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    environment:
+#      - PMA_ARBITRARY=1
+#      - PMA_HOST=mysql
+#      - PMA_USER=root
+#      - PMA_PASSWORD=password
+#    ports:
+#      - ${HOST_IP:-127.0.0.1}:${HOST_PMA_PORT:-8080}:80
+#    links:
+#      - mysql

@@ -23,7 +23,6 @@ help:
 	@echo "  make help              Prints this help."
 	@echo
 	@echo "  make open              Open www in your browser."
-	@echo "  make open-nginx        Open nginx in your browser."
 	@echo "  make open-pma          Open phpmyadmin in your browser."
 	@echo
 	@echo "Docker:"
@@ -51,7 +50,7 @@ help:
 	@echo
 
 
-.PHONY: open open-pma open-nginx
+.PHONY: open open-pma
 
 open:
 	$(OPEN) http://$(IP):$(shell docker-compose -p $(APP_NAME) port apache 80 | cut -d':' -f2)
@@ -59,22 +58,19 @@ open:
 open-pma:
 	$(OPEN) http://$(IP):$(shell docker-compose -p $(APP_NAME) port phpmyadmin 80 | cut -d':' -f2)
 
-open-nginx:
-	$(OPEN) http://$(IP):$(shell docker-compose -p $(APP_NAME) port nginx 80 | cut -d':' -f2)
-
-.PHONY: build serve start stop down status restart serve-pma start-pma serve-nginx start-nginx
+.PHONY: build serve start stop down status restart serve-pma start-pma
 
 build:
-	@docker-compose -p $(APP_NAME) build apache mysql smtp
+	@docker-compose -p $(APP_NAME) build
 
 serve:
-	@docker-compose -p $(APP_NAME) up apache mysql smtp
+	@docker-compose -p $(APP_NAME) up
 
 start:
-	@docker-compose -p $(APP_NAME) up -d apache mysql smtp
+	@docker-compose -p $(APP_NAME) up -d
 
 stop:
-	@docker-compose -p $(APP_NAME) stop apache mysql smtp
+	@docker-compose -p $(APP_NAME) stop
 
 restart: stop start
 
@@ -89,12 +85,6 @@ serve-pma:
 
 start-pma:
 	@docker-compose -p $(APP_NAME) up -d --build phpmyadmin
-
-serve-nginx:
-	@docker-compose -p $(APP_NAME) up --build nginx fpm
-
-start-nginx:
-	@docker-compose -p $(APP_NAME) up -d nginx fpm
 
 .PHONY: shell composer-install migrate rollback seed routes composer composer-autoload artisan artisan-key-generate artisan-storage-link
 
@@ -111,22 +101,22 @@ seed:
 	@docker-compose -p $(APP_NAME) exec apache php artisan db:seed
 
 routes:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan route:list
+	@docker-compose -p $(APP_NAME) exec apache php artisan route:list
 
 composer-install:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer install
+	@docker-compose -p $(APP_NAME) exec apache composer install
 
 composer:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer ${CM}
+	@docker-compose -p $(APP_NAME) exec apache composer ${CM}
 
 composer-autoload:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer dump-autoload
+	@docker-compose -p $(APP_NAME) exec apache composer dump-autoload
 
 artisan:
 	@docker-compose -p $(APP_NAME) exec apache php artisan ${CM}
 
 artisan-key-generate:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm --entrypoint php composer artisan key:generate
+	@docker-compose -p $(APP_NAME) exec apache php artisan key:generate
 
 artisan-storage-link:
 	@docker-compose -p $(APP_NAME) exec apache php artisan storage:link
@@ -134,16 +124,16 @@ artisan-storage-link:
 .PHONY: npm npm-install npm-dev npm-watch
 
 npm:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm npm ${CM}
+	@docker-compose -p $(APP_NAME) exec apache npm ${CM}
 
 npm-install:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm npm install
+	@docker-compose -p $(APP_NAME) exec apache npm install
 
 npm-dev:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm npm run dev
+	@docker-compose -p $(APP_NAME) exec apache npm run dev
 
 npm-watch:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm npm run watch
+	@docker-compose -p $(APP_NAME) exec apache npm run watch
 
 .PHONY: copy-env setup
 
@@ -158,7 +148,7 @@ phpcs:
 	php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
 
 docker-phpcs:
-	@docker-compose -f docker-middleware.yml -p $(APP_NAME) run --rm composer php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
+	@docker-compose -p $(APP_NAME) exec apache php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
 
 .PHONY: ide-helper-generate ide-helper-model ide-helper-meta ide-helper
 
