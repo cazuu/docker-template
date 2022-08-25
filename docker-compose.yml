@@ -43,6 +43,7 @@ services:
       - smtp
   mysql:
     image: mysql:5.7
+    platform: linux/x86_64
     environment:
       MYSQL_DATABASE: database
       MYSQL_ROOT_PASSWORD: password
