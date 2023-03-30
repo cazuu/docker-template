@@ -8,8 +8,8 @@ COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules/
 RUN apt-get update -y \
     && apt-get install -y libicu-dev libxml2-dev supervisor cron libmagickwand-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev locales git \
     && docker-php-ext-install xml intl mbstring pdo_mysql \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
+#    && pecl install xdebug \
+#    && docker-php-ext-enable xdebug \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-ext-configure zip --with-libzip \
@@ -17,10 +17,10 @@ RUN apt-get update -y \
     && docker-php-ext-install gd \
     && localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-    && \
-    { \
-      echo 'xdebug.remote_enable=1'; \
-    } > /usr/local/etc/php/conf.d/overrides.ini \
+#    && \
+#    { \
+#      echo 'xdebug.remote_enable=1'; \
+#    } > /usr/local/etc/php/conf.d/overrides.ini \
     && \
     { \
       echo "file_uploads = On"; \
