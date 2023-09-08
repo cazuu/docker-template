@@ -5,7 +5,9 @@ COPY --from=composer:2.3 /usr/bin/composer /usr/bin/composer
 COPY --from=node /usr/local/bin/node /usr/local/bin/
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules/
 
-RUN apt-get update -y \
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list \
+    && apt-get update -y \
     && apt-get install -y libicu-dev libxml2-dev supervisor cron libmagickwand-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev locales git \
     && docker-php-ext-install xml intl mbstring pdo_mysql \
 #    && pecl install xdebug \
