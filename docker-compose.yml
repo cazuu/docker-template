@@ -2,7 +2,7 @@ version: '3'
 
 services:
   apache:
-    image: apache-php-7.3.13
+    image: apache-php-7.4
     build:
       dockerfile: apache/Dockerfile
       context: .
