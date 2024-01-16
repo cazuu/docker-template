@@ -14,6 +14,7 @@ RUN apt-get update -y \
     && docker-php-ext-enable imagick \
     && docker-php-ext-install zip \
     && docker-php-ext-install gd \
+    && docker-php-ext-install exif \
     && localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 #    && \
