@@ -53,87 +53,87 @@ help:
 .PHONY: open open-pma
 
 open:
-	$(OPEN) http://$(IP):$(shell docker-compose -p $(APP_NAME) port apache 80 | cut -d':' -f2)
+	$(OPEN) http://$(IP):$(shell docker compose -p $(APP_NAME) port apache 80 | cut -d':' -f2)
 
 open-pma:
-	$(OPEN) http://$(IP):$(shell docker-compose -p $(APP_NAME) port phpmyadmin 80 | cut -d':' -f2)
+	$(OPEN) http://$(IP):$(shell docker compose -p $(APP_NAME) port phpmyadmin 80 | cut -d':' -f2)
 
 .PHONY: build serve start stop down status restart serve-pma start-pma
 
 build:
-	@docker-compose -p $(APP_NAME) build
+	@docker compose -p $(APP_NAME) build
 
 serve:
-	@docker-compose -p $(APP_NAME) up
+	@docker compose -p $(APP_NAME) up
 
 start:
-	@docker-compose -p $(APP_NAME) up -d
+	@docker compose -p $(APP_NAME) up -d
 
 stop:
-	@docker-compose -p $(APP_NAME) stop
+	@docker compose -p $(APP_NAME) stop
 
 restart: stop start
 
 down:
-	@docker-compose -p $(APP_NAME) down
+	@docker compose -p $(APP_NAME) down
 
 status:
-	@docker-compose -p $(APP_NAME) ps
+	@docker compose -p $(APP_NAME) ps
 
 serve-pma:
-	@docker-compose -p $(APP_NAME) up --build phpmyadmin
+	@docker compose -p $(APP_NAME) up --build phpmyadmin
 
 start-pma:
-	@docker-compose -p $(APP_NAME) up -d --build phpmyadmin
+	@docker compose -p $(APP_NAME) up -d --build phpmyadmin
 
 .PHONY: shell composer-install migrate rollback seed routes composer composer-autoload artisan artisan-key-generate artisan-storage-link
 
 shell:
-	@docker-compose -p $(APP_NAME) exec apache /bin/bash
+	@docker compose -p $(APP_NAME) exec apache /bin/bash
 
 migrate:
-	@docker-compose -p $(APP_NAME) exec apache php artisan migrate
+	@docker compose -p $(APP_NAME) exec apache php artisan migrate
 
 rollback:
-	@docker-compose -p $(APP_NAME) exec apache php artisan migrate:rollback
+	@docker compose -p $(APP_NAME) exec apache php artisan migrate:rollback
 
 seed:
-	@docker-compose -p $(APP_NAME) exec apache php artisan db:seed
+	@docker compose -p $(APP_NAME) exec apache php artisan db:seed
 
 routes:
-	@docker-compose -p $(APP_NAME) exec apache php artisan route:list
+	@docker compose -p $(APP_NAME) exec apache php artisan route:list
 
 composer-install:
-	@docker-compose -p $(APP_NAME) exec apache composer install
+	@docker compose -p $(APP_NAME) exec apache composer install
 
 composer:
-	@docker-compose -p $(APP_NAME) exec apache composer ${CM}
+	@docker compose -p $(APP_NAME) exec apache composer ${CM}
 
 composer-autoload:
-	@docker-compose -p $(APP_NAME) exec apache composer dump-autoload
+	@docker compose -p $(APP_NAME) exec apache composer dump-autoload
 
 artisan:
-	@docker-compose -p $(APP_NAME) exec apache php artisan ${CM}
+	@docker compose -p $(APP_NAME) exec apache php artisan ${CM}
 
 artisan-key-generate:
-	@docker-compose -p $(APP_NAME) exec apache php artisan key:generate
+	@docker compose -p $(APP_NAME) exec apache php artisan key:generate
 
 artisan-storage-link:
-	@docker-compose -p $(APP_NAME) exec apache php artisan storage:link
+	@docker compose -p $(APP_NAME) exec apache php artisan storage:link
 
 .PHONY: npm npm-install npm-dev npm-watch
 
 npm:
-	@docker-compose -p $(APP_NAME) exec apache npm ${CM}
+	@docker compose -p $(APP_NAME) exec apache npm ${CM}
 
 npm-install:
-	@docker-compose -p $(APP_NAME) exec apache npm install
+	@docker compose -p $(APP_NAME) exec apache npm install
 
 npm-dev:
-	@docker-compose -p $(APP_NAME) exec apache npm run dev
+	@docker compose -p $(APP_NAME) exec apache npm run dev
 
 npm-watch:
-	@docker-compose -p $(APP_NAME) exec apache npm run watch
+	@docker compose -p $(APP_NAME) exec apache npm run watch
 
 .PHONY: copy-env setup
 
@@ -148,17 +148,17 @@ phpcs:
 	php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
 
 docker-phpcs:
-	@docker-compose -p $(APP_NAME) exec apache php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
+	@docker compose -p $(APP_NAME) exec apache php ./vendor/bin/phpcs -p -s --colors --report-full --report-summary --standard=./phpcs.xml ./app
 
 .PHONY: ide-helper-generate ide-helper-model ide-helper-meta ide-helper
 
 ide-helper-generate:
-	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:generate
+	@docker compose -p $(APP_NAME) exec apache php artisan ide-helper:generate
 
 ide-helper-model:
-	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:model --nowrite
+	@docker compose -p $(APP_NAME) exec apache php artisan ide-helper:model --nowrite
 
 ide-helper-meta:
-	@docker-compose -p $(APP_NAME) exec apache php artisan ide-helper:meta
+	@docker compose -p $(APP_NAME) exec apache php artisan ide-helper:meta
 
 ide-helper: ide-helper-generate ide-helper-model ide-helper-meta
